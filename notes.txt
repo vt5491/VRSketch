@@ -1,0 +1,3 @@
+when running the python server, start it from /app
+
+when running with grunt serve, start it in the root folder (the one with Gruntfile)

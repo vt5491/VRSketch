@@ -1,0 +1,5 @@
+I created this dir.  It was not part of the default dir structure.
+
+It's for js external js code that does not have a bower or npm package.
+
+I just copied from /home/vturner/vtstuff/public-html/projects/RiftSketch/lib
