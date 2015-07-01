@@ -30,6 +30,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
             </button>
 
             <a class="navbar-brand" href="#/">vrsketch</a>
@@ -41,6 +42,7 @@
               <li class="active"><a href="#/">Home</a></li>
               <li><a ng-href="#/about">About</a></li>
               <li><a ng-href="#/">Contact</a></li>
+              <li><a ng-href="#/vrsketchApp">vrsketchapp</a></li>
             </ul>
           </div>
         </div>
@@ -54,6 +56,20 @@
     <!--vt add -->
     <canvas id="viewer"></canvas>
     vt says hi
+    vtsketchController:
+    <div class="vt-div" ng-controller="VrsketchCtrl">
+      <button type="button" class="vt_button" ng-click="vt_do_it()">vt_do_it in VrsketchCtrl </button>
+      <br/>
+    </div>
+    <div class="vt-div" ng-controller="VrsketchCtrl">
+      <button type="button" class="vt_button" ng-click="vt_do_it_2()">vt_do_it_2 in VrsketchCtrl </button>
+      <br/>
+    </div>
+    <div class="vt-div" ng-controller="VrsketchCtrl">
+      <button type="button" class="debug" ng-click="debug()">debug it</button>
+      <br/>
+    </div>
+    
     <!--vt end -->
     
     <div class="footer">
@@ -95,6 +111,7 @@
         <script src="scripts/controllers/about.js"></script>
         <script src="scripts/services/base.js"></script>
         <script src="scripts/services/index.js"></script>
+        <script src="scripts/controllers/vrsketch.js"></script>
         <!-- endbuild -->
     <!--vt manual add -->
     <script src="lib/VRControls.js"></script>
