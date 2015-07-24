@@ -1,5 +1,7 @@
 'use strict';
- 
+
+// Note: vrsketch is the new controller
+// 'vrsketchApp' is the old version
 /**
  * @ngdoc overview
  * @name vrsketchApp
@@ -33,6 +35,11 @@ angular
         controller: 'VrsketchCtrl'
       })
     //vt end
+      .when('/vrSketch', {
+        templateUrl: 'views/vrsketch.html',
+        controller: 'VrsketchCtrl',
+        controllerAs: 'vrSketch'
+      })
       .otherwise({
         redirectTo: '/'
       });

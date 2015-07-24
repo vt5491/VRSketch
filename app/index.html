@@ -2,7 +2,7 @@
 <html class="no-js">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>VRSketch</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -13,6 +13,9 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+    <!--vt add -->
+    <link rel="stylesheet" href="styles/vrsketch.css">
+    <!--vt end -->
   </head>
   <body ng-app="vrsketchApp">
     <!--[if lt IE 7]>
@@ -31,6 +34,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
             </button>
 
             <a class="navbar-brand" href="#/">vrsketch</a>
@@ -43,26 +47,31 @@
               <li><a ng-href="#/about">About</a></li>
               <li><a ng-href="#/">Contact</a></li>
               <li><a ng-href="#/vrsketchApp">vrsketchapp</a></li>
+              <li><a ng-href="#/vrsketch">vrsketch</a></li>
             </ul>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="container">
-    <div ng-view=""></div>
-    </div>
+    <!-- <div keypress-events class="container keypress-events" id="canvas_container" ng-controller="VrsketchCtrl">  -->
+    <div class="container" id="canvas_container" ng-controller="VrsketchCtrl"> 
+    <!-- <div ng-view=""></div> -->
+    
 
     <!--vt add -->
-    <canvas id="viewer"></canvas>
-    vt says hi
-    vtsketchController:
+      <button type="button" class="button_ctrl" ng-click="toggleAnimation()">toggle animation</button>
+      <!-- <canvas id="viewer" class="keypress-events" keypress-events=""></canvas> -->
+      <canvas id="viewer" class="keypress-events" canvas-keys=""=""></canvas>
+      vt says hi
+      vtsketchController:
+    </div>
     <div class="vt-div" ng-controller="VrsketchCtrl">
-      <button type="button" class="vt_button" ng-click="vt_do_it()">vt_do_it in VrsketchCtrl </button>
+      <button type="button" class="vt_button" ng-click="doIt()">doIt</button>
       <br/>
     </div>
     <div class="vt-div" ng-controller="VrsketchCtrl">
-      <button type="button" class="vt_button" ng-click="vt_do_it_2()">vt_do_it_2 in VrsketchCtrl </button>
+      <button type="button" class="vt_button" ng-click="vt_do_it_2()">vt_do_it_2</button>
       <br/>
     </div>
     <div class="vt-div" ng-controller="VrsketchCtrl">
@@ -102,6 +111,7 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/threejs/build/three.js"></script>
+    <script src="bower_components/lodash/lodash.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -112,12 +122,24 @@
         <script src="scripts/services/base.js"></script>
         <script src="scripts/services/index.js"></script>
         <script src="scripts/controllers/vrsketch.js"></script>
+        <script src="scripts/services/vrsketchservice.js"></script>
+        <script src="scripts/services/textarea.js"></script>
+        <script src="scripts/services/controls.js"></script>
+        <script src="scripts/services/camera.js"></script>
+        <script src="scripts/directives/keypressevents.js"></script>
+        <script src="scripts/directives/canvaskeys.js"></script>
+        <script src="scripts/services/utils.js"></script>
+        <script src="scripts/services/backgroundplane.js"></script>
+        <script src="scripts/services/sparsegridbackground.js"></script>
         <!-- endbuild -->
     <!--vt manual add -->
     <script src="lib/VRControls.js"></script>
     <script src="lib/VREffect.js"></script>
     <script src="lib/webvr-manager.js"></script>
     <script src="lib/webvr-polyfill.js"></script>
+    <script src="lib/stats.min.js"></script>
+    <!-- <script src="lib/dat.gui.min.js"></script> -->
+    <script src="lib/dat.gui.js"></script>
     <!--vt end -->
 </body>
 </html>

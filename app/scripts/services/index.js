@@ -8,9 +8,9 @@
  * Factory in the vrsketchApp.
  */
 angular.module('vrsketchApp')
-  .factory('index', function ($window) {
+  .factory('index',['$window', 'base', function ($window, base) {
     // Service logic
-    // ...
+    // ... 
 
     var meaningOfLife = 42;
 
@@ -58,37 +58,43 @@ angular.module('vrsketchApp')
       this.vt_num++;
 
       console.log('service.index.js.doSomething2: this.vt_num=' + this.vt_num);
+      console.log('service.index.js.doSomething2: base.ONE_DEGREE=' + base.ONEDEGREE);
     };
 
     //TODO create an init function here.
     // add a this.ctrl =ctrl, so I don't have to keep passing it around.
     // I'll have to update the uts to init index.init instead of passing it too
     // I can't really ut this function, as it's end to end
-    factory.init = function (ctrl, $window) {
-      this.initWebGl(ctrl, $window);
-      this.initScene(ctrl);
+    factory.init = function ($window) {
+      this.initWebGl($window);
+      this.initScene();
     };
     
-    factory.initWebGl = function (ctrl, $window) {
-      console.log('service.index.js: entered initWebGl, ctrl=' + ctrl);
+    factory.initWebGl = function ( $window) {
+      console.log('service.index.js: entered initWebGl, this=' + this);
       console.log('service.index.js: $window=' + $window);
       console.log('service.index.js: $window.innerWidth=' + $window.innerWidth);
       console.log('service.index.js: $window.innerHeight=' + $window.innerHeight);
       // wierd init case where this function is called without ctrl being set
       // just return right away
-      if (typeof ctrl === 'undefined') {
-        return;
-      };
+      // if (typeof ctrl === 'undefined') {
+      //   return;
+      // };
 
-      ctrl.width = $window.innerWidth;
-      ctrl.height = $window.innerHeight;
-      
+      this.width = $window.innerWidth;
+      this.height = $window.innerHeight;
+
+      //console.log('index.initWebGl: viewer=' + document.getElementById('viewer'));
+      console.log('index.initWebGl: viewer=' + angular.element(document.getElementById('viewer')));
       try {
         // TODO: mock document.getElementbyid('viewer') in ut setup
         // so that I can test with the canvas parm?
         console.log("index.initWebGl now getting renderer");
-        ctrl.renderer = new THREE.WebGLRenderer({
+        //console.log('index.initWebGl document.getElementById(viewer)' = document.getElementById('viewer');
+        
+        this.renderer = new THREE.WebGLRenderer({
           antialias: true,
+          //canvas: angular.element(document.getElementById('viewer'))
           canvas: document.getElementById('viewer')
         });
       }
@@ -99,16 +105,16 @@ angular.module('vrsketchApp')
       }
 
       // add to the controller that calls, not this factory
-      ctrl.renderer.setClearColor(0xD3D3D3, 1.0);
-      ctrl.renderer.setSize(ctrl.width, ctrl.height);
-      //ctrl.renderer.setSize(ctrl.height, ctrl.height);
+      this.renderer.setClearColor(0xD3D3D3, 1.0);
+      this.renderer.setSize(this.width, this.height);
+      //this.renderer.setSize(this.height, this.height);
       
-      ctrl.container = document.getElementById('container');
+      this.container = document.getElementById('container');
 
     };
 
   // setup some pointer info at the axes
-    factory.initAxes = function(ctrl) {
+    factory.initAxes = function() {
       var line_geometry, line_material;
       
       // x-axis
@@ -120,9 +126,9 @@ angular.module('vrsketchApp')
       line_geometry.vertices.push( new THREE.Vector3(0,0,0));
       line_geometry.vertices.push( new THREE.Vector3(1,0,0));
 
-      ctrl.xAxisLine = new THREE.Line(line_geometry, line_material);
+      this.xAxisLine = new THREE.Line(line_geometry, line_material);
 
-      ctrl.scene.add(ctrl.xAxisLine);
+      this.scene.add(this.xAxisLine);
 
       // y-axis
       line_material = new THREE.LineBasicMaterial();
@@ -133,9 +139,9 @@ angular.module('vrsketchApp')
       line_geometry.vertices.push( new THREE.Vector3(0,0,0));
       line_geometry.vertices.push( new THREE.Vector3(0,1,0));
 
-      ctrl.yAxisLine = new THREE.Line(line_geometry, line_material);
+      this.yAxisLine = new THREE.Line(line_geometry, line_material);
 
-      ctrl.scene.add(ctrl.yAxisLine);
+      this.scene.add(this.yAxisLine);
 
       // z-axis
       line_material = new THREE.LineBasicMaterial();
@@ -146,33 +152,33 @@ angular.module('vrsketchApp')
       line_geometry.vertices.push( new THREE.Vector3(0,0,0));
       line_geometry.vertices.push( new THREE.Vector3(0,0,1));
 
-      ctrl.zAxisLine = new THREE.Line(line_geometry, line_material);
+      this.zAxisLine = new THREE.Line(line_geometry, line_material);
 
-      ctrl.scene.add(ctrl.zAxisLine);        
+      this.scene.add(this.zAxisLine);        
     };
 
-    factory.initScene = function(ctrl) {
-      console.log("service:index.initScene 2: ctrl=" + ctrl);
+    factory.initScene = function() {
+      //console.log("service:index.initScene 2: ctrl=" + ctrl);
 
       // todo: make a real renderer
       //ctrl.renderer = {};
-      ctrl.scene = new THREE.Scene();
+      this.scene = new THREE.Scene();
 
-      ctrl.camera = new THREE.PerspectiveCamera(
-      75, ctrl.width / ctrl.height, 1, 10000);
+      this.camera = new THREE.PerspectiveCamera(
+      75, this.width / this.height, 1, 10000);
 
       //vt-hack add
       // this should be in the animation loop
       //this.BasePosition = new THREE.Vector3(0.0, 2.0, EDITOR_CAMERA_DISTANCE);
-      ctrl.camera.position.copy(new THREE.Vector3(0.0, 2.0, 2.0));
+      this.camera.position.copy(new THREE.Vector3(0.0, 2.0, 2.0));
       //vt-hack end
-      ctrl.controls = new THREE.VRControls(ctrl.camera);
-      ctrl.effect = new THREE.VREffect(ctrl.renderer);
-      ctrl.effect.setSize(ctrl.width, ctrl.height);
+      this.controls = new THREE.VRControls(this.camera);
+      this.effect = new THREE.VREffect(this.renderer);
+      this.effect.setSize(this.width, this.height);
 
-      ctrl.vrManager = new WebVRManager(ctrl.renderer, ctrl.effect);
+      this.vrManager = new WebVRManager(this.renderer, this.effect);
       
-      var maxAnisotropy = ctrl.renderer.getMaxAnisotropy();
+      var maxAnisotropy = this.renderer.getMaxAnisotropy();
       //linux
       var groundTexture = THREE.ImageUtils.loadTexture('images/background.png');
       // windows
@@ -188,11 +194,12 @@ angular.module('vrsketchApp')
         new THREE.MeshBasicMaterial({map: groundTexture}) );
       ground.rotation.x = -Math.PI / 2;
       //ground.rotation.x = 0.0;
-      ctrl.scene.add(ground);
+      this.scene.add(ground);
 
-      this.initAxes(ctrl);
+      this.initAxes();
     };
 
+    /*    
     factory.render = function () { 
       //vt add
       // note hasVR is not set anywhere in the code base.  hmd is set by default though
@@ -254,7 +261,8 @@ angular.module('vrsketchApp')
         }
       }.bind(this));
     }; // end render
-    
+     */    
     return factory;
-  });
+  }]);
+     
 

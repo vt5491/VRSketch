@@ -1,10 +1,12 @@
+//vt comments are allowed
+// dangling commas are not e.g do not have a comma on last entry
 {
   "node": true,
   "browser": true,
   "esnext": true,
   "bitwise": true,
-  "camelcase": true,
   "curly": true,
+//  "camelcase": true,
   "eqeqeq": true,
   "immed": true,
   "indent": 2,
@@ -18,6 +20,10 @@
   "trailing": true,
   "smarttabs": true,
   "globals": {
-    "angular": false
+    "angular": false,
+    //vt add
+    "THREE": false,
+    "WebVRManager": false
+    //vt end
   }
 }

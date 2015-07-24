@@ -1,3 +1,15 @@
 when running the python server, start it from /app
 
 when running with grunt serve, start it in the root folder (the one with Gruntfile)
+
+ 2015-07-06
+
+ Good wav when you find the one that is going on web refresh:
+ Window hardware fail.wav
+ Winodw Proximity.wav
+
+ I modified System notification to no effect
+
+2015-07-22
+When genning something with yo, start in the directory that has the Gruntfile.js in it
+e.g the main root folder, not the app folder.

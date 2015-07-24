@@ -23,14 +23,7 @@ module.exports = function (grunt) {
 
   // Define the configuration for all the tasks
   grunt.initConfig({
-    //vt add
-    // open: {
-    //   dev: {
-    //     path: 'http://localhost:9000/',
-    //     app: 'c:\\vtstuff\\program_files\\firefox_nightly\\firefox.exe'
-    //   }
-    // },
-    //vt end
+
     // Project settings
     yeoman: appConfig,
 
@@ -40,19 +33,19 @@ module.exports = function (grunt) {
         files: ['bower.json'],
         tasks: ['wiredep']
       },
-      js: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
-        //vt remove this because it takes like 13s
-        //vttasks: ['newer:jshint:all'],
-        options: {
-          livereload: '<%= connect.options.livereload %>'
-        }
-      },
-//      jsTest: {
-//        files: ['test/spec/{,*/}*.js'],
-//        //tasks: ['newer:jshint:test', 'karma']
-//        tasks: ['karma']
+//      js: {
+//        files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+//        //vt remove this because it takes like 13s
+//        //vttasks: ['newer:jshint:all'],
+//        options: {
+//          livereload: '<%= connect.options.livereload %>'
+//        }
 //      },
+      jsTest: {
+        files: ['test/spec/{,*/}*.js'],
+        //tasks: ['newer:jshint:test', 'karma']
+        tasks: ['karma']
+      },
       compass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
         tasks: ['compass:server', 'autoprefixer']
@@ -75,37 +68,15 @@ module.exports = function (grunt) {
     // The actual grunt server settings
     connect: {
       options: {
-        port: 9000,
-        //port: 8000,
-        //port: 8001,
+        //vtport: 9000,
+        port: 8000,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost',
         livereload: 35729
-        // //vt add
-        ,
-        // open: {
-        //   //server: {
-        //   //url: 'http://localhost:<%= connect.options.port %>',
-        //   target: 'http://localhost:9000',
-        //   appName: 'firefox'
-        //   //}
-        // }
-        //open: false
-        // //vt end
       },
       livereload: {
         options: {
-          //vt open: true,
-          //vt add
-          open: {
-            //server: {
-            //url: 'http://localhost:<%= connect.options.port %>',
-            //target: 'http://localhost:9000',
-            target: 'http://localhost:<%= connect.options.port %>',
-            appName: 'firefox'
-            //}
-          },
-          //vt end
+          open: true,
           middleware: function (connect) {
             return [
               connect.static('.tmp'),
@@ -144,15 +115,6 @@ module.exports = function (grunt) {
           base: '<%= yeoman.dist %>'
         }
       }
-      // //vt add
-      // ,
-      // open: {
-      //   server: {
-      //     url: 'http://localhost:<%= connect.options.port %>',
-      //     app: 'firefox'
-      //   }
-      // }
-      // //vt end
     },
 
     // Make sure code styles are up to par and there are no obvious mistakes
@@ -457,10 +419,9 @@ module.exports = function (grunt) {
     // Test settings
     karma: {
       unit: {
-//        configFile: 'test/karma.conf.js',
-//        //singleRun: true
-//        singleRun: false
-          //grunt.log.writeln("please run unit tests with the Gruntfile_test.js file");
+        configFile: 'test/karma.conf.js',
+        //singleRun: true
+        singleRun: false
       }
     }
   });
@@ -511,12 +472,6 @@ module.exports = function (grunt) {
     'usemin',
     'htmlmin'
   ]);
-
- //vt add
- grunt.registerTask('karma', function() {
-                      grunt.log.writeln('>>>>>>>> please run karma using the Gruntfile_test.js file (--gruntfile parm) <<<<<<<<<<<<');
-                      });
- //vt end
 
   grunt.registerTask('default', [
     'newer:jshint',

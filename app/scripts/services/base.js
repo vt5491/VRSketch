@@ -27,5 +27,9 @@ angular.module('vrsketchApp')
 
     factory.ONE_DEGREE = Math.PI / 180.0;
 
+    factory.CAMERA_MOVE_DELTA = 0.2;
+    // CAMERA_ROT_DELTA is in degrees
+    factory.CAMERA_ROT_DELTA = 10; 
+    
     return factory;
   });
