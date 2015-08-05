@@ -10,11 +10,11 @@
 angular.module('vrsketchApp')
   //.controller('VrsketchCtrl', function (VrSketchService) {
   .controller('VrsketchCtrl', function ($scope, VrsketchService) {        
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+    // this.awesomeThings = [
+    //   'HTML5 Boilerplate',
+    //   'AngularJS',
+    //   'Karma'
+    // ];
 
     //$scope.animationActive = true;
     

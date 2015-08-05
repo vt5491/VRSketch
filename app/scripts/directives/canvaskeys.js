@@ -20,47 +20,62 @@ angular.module('vrsketchApp')
         var kbdHandler = function(event) {
           //console.log("hello mammy2, event.which=" + event.which + ",event.shiftKey=" + event.shiftKey);
           // all the canvas keystrokes are alt-key combos
-          if (!(event.altKey && event.shiftKey)) {
-            return;
-          };
+          // if (!(event.altKey && event.shiftKey)) {
+          //   return;
+          // };
 
           // prevent browser from handling as well
           event.preventDefault();
 
           switch( event.keyCode) {
             case 'S'.charCodeAt(0):
-            // console.log("canvaskeys:VrsketchService.camera.cameraObject.position.z=" + VrsketchService.camera.cameraObject.position.z);
+            //console.log("canvaskeys:VrsketchService.camera.cameraObject.position.z=" + VrsketchService.camera.cameraObject.position.z);
             // console.log("canvaskeys:VrsketchService.camera.cameraObject.position.y=" + VrsketchService.camera.cameraObject.position.y);
-            //   //VrsketchService.BasePosition.x += Math.sin(VrsketchService.BaseRotation.y);
+              //VrsketchService.BasePosition.x += Math.sin(VrsketchService.BaseRotation.y);
               //VrsketchService.BasePosition.z += Math.cos(VrsketchService.BaseRotation.y);
 
-              VrsketchService.camera.cameraObject.translateZ(base.CAMERA_MOVE_DELTA);
+            //VrsketchService.camera.cameraObject.translateZ(base.CAMERA_MOVE_DELTA);
+            // 
+            // VrsketchService.camera.cameraObject.position.z += 0.5;
+            // console.log("canvaskeys:VrsketchService.camera.cameraObject.position.z (post)=" + VrsketchService.camera.cameraObject.position.z);
+            //console.log("canvaskeys: BasePosition.z (pre)=" + VrsketchService.BasePosition.z);
+            //VrsketchService.BasePosition.translateZ(base.CAMERA_MOVE_DELTA);
+            //VrsketchService.BasePosition.z += base.CAMERA_MOVE_DELTA;
+            //console.log("canvaskeys: camera.cameraLogical.position.z (pre)=" + VrsketchService.camera.cameraLogical.position.z);
+            VrsketchService.camera.cameraLogical.translateZ(base.CAMERA_MOVE_DELTA);
+            //console.log("canvaskeys: camera.cameraLogical.position.z (post)=" + VrsketchService.camera.cameraLogical.position.z);
               break;
             case 'W'.charCodeAt(0):
               // update BasePostion
             // VrsketchService.BasePosition.x -= Math.sin(VrsketchService.BaseRotation.y);
             // VrsketchService.BasePosition.z -= Math.cos(VrsketchService.BaseRotation.y);
+              //console.log("canvaskeys: you pressed w key: base.CAMERA_MOVE_DELTA=" + base.CAMERA_MOVE_DELTA);
+              //console.log("canvaskeys: you pressed w key: VrsketchService.camera.cameraObject=" + VrsketchService.camera.cameraObject);
             
-              VrsketchService.camera.cameraObject.translateZ(-base.CAMERA_MOVE_DELTA);
+              //VrsketchService.camera.cameraObject.translateZ(-base.CAMERA_MOVE_DELTA);
+              VrsketchService.camera.cameraLogical.translateZ(-base.CAMERA_MOVE_DELTA);
 
               break;
             case 'A'.charCodeAt(0):
             //   VrsketchService.BasePosition.x -= Math.sin(VrsketchService.BaseRotation.y + Math.PI / 2);
             // VrsketchService.BasePosition.z -= Math.cos(VrsketchService.BaseRotation.y + Math.PI / 2);
-            VrsketchService.camera.cameraObject.translateX(-base.CAMERA_MOVE_DELTA);
+            //VrsketchService.camera.cameraObject.translateX(-base.CAMERA_MOVE_DELTA);
+            VrsketchService.camera.cameraLogical.translateX(-base.CAMERA_MOVE_DELTA);
 
               break;
             case 'D'.charCodeAt(0):
               // update BasePostion
             //   VrsketchService.BasePosition.x += Math.sin(VrsketchService.BaseRotation.y + Math.PI / 2);
             // VrsketchService.BasePosition.z += Math.cos(VrsketchService.BaseRotation.y + Math.PI / 2);
-              VrsketchService.camera.cameraObject.translateX(base.CAMERA_MOVE_DELTA);
+              //VrsketchService.camera.cameraObject.translateX(base.CAMERA_MOVE_DELTA);
+              VrsketchService.camera.cameraLogical.translateX(base.CAMERA_MOVE_DELTA);
 
               break;
 
             case 'Q'.charCodeAt(0):
               //VrsketchService.BaseRotation.y = VrsketchService.BaseRotation.y +  base.ONE_DEGREE * 10;
             VrsketchService.BaseRotation.y +=  base.ONE_DEGREE * base.CAMERA_ROT_DELTA;
+
             //VrsketchService.BaseRotation.rotateOnAxis(new THREE.Vector3(0,1,0), base.ONE_DEGREE * 10);
             //VrsketchService.camera.cameraObject.rotateOnAxis(new THREE.Vector3(0,1,0), base.ONE_DEGREE * 10);
             //VrsketchService.control.rotY += 10;
@@ -72,23 +87,25 @@ angular.module('vrsketchApp')
             break;
             case 'P'.charCodeAt(0):
 
-              VrsketchService.camera.cameraObject.translateY(base.CAMERA_MOVE_DELTA);
+              //VrsketchService.camera.cameraObject.translateY(base.CAMERA_MOVE_DELTA);
+              VrsketchService.camera.cameraLogical.translateY(base.CAMERA_MOVE_DELTA);
 
             break;
             case 'N'.charCodeAt(0):
 
-              VrsketchService.camera.cameraObject.translateY(-base.CAMERA_MOVE_DELTA);
+              //VrsketchService.camera.cameraObject.translateY(-base.CAMERA_MOVE_DELTA);
+              VrsketchService.camera.cameraLogical.translateY(-base.CAMERA_MOVE_DELTA);
 
             break;
             
             case 'R'.charCodeAt(0):
-            console.log("canvaskeys: now in R handler");
-            console.log("canvaskeys: VrsketchService.INIT_POSITION.z=" + VrsketchService.INIT_POSITION.z);
-            console.log("canvaskeys: BasePostion.z pre=" + VrsketchService.BasePosition.z);
+            // console.log("canvaskeys: now in R handler");
+            // console.log("canvaskeys: VrsketchService.INIT_POSITION.z=" + VrsketchService.INIT_POSITION.z);
+            // console.log("canvaskeys: BasePostion.z pre=" + VrsketchService.BasePosition.z);
             VrsketchService.BasePosition.copy(VrsketchService.INIT_POSITION);
             VrsketchService.BaseRotation.copy(VrsketchService.INIT_ROTATION);
 
-            console.log("canvaskeys: BasePostion.z post=" + VrsketchService.BasePosition.z);
+            // console.log("canvaskeys: BasePostion.z post=" + VrsketchService.BasePosition.z);
             break;
           }
           

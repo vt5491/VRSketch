@@ -20,7 +20,7 @@ describe('Service: VrSketchService', function () {
     expect(VrsketchService.createStats).toBeDefined();
 
     var stats = VrsketchService.createStats();
-    console.log('ut: top=' + stats.domElement.style.top);
+    //console.log('ut: top=' + stats.domElement.style.top);
     expect(typeof stats).toEqual('object');
     expect(typeof stats.domElement).toEqual('object');
     expect(stats.domElement.style.top).toEqual('0px');

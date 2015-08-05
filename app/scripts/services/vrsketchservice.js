@@ -45,8 +45,12 @@ angular.module('vrsketchApp')
     // factory.camera.aspect = this.width / this.height;
     //console.log("VrsketchService: injected factory.camera.cameraObject.fov=" + factory.camera.cameraObject.fov);
     //console.log("VrsketchService: injected factory.camera.cameraObject.aspect=" + factory.camera.cameraObject.aspect);
+    factory.bg = {
+      structure: 'sparseGrid'
+    };
 
-    
+    console.log("vrsketchService: bg.structure=" + factory.bg.structure);
+
     factory.do_it = function() {
 
     };
@@ -193,6 +197,12 @@ angular.module('vrsketchApp')
       //this.camera.cameraObject.position.copy(new THREE.Vector3(0.0, 2.0, 2.0));
       this.camera.cameraObject.position.copy(this.BasePosition);
       this.camera.cameraObject.quaternion.copy(this.BaseRotation);
+
+      // and save in cameraLogical because cameraObject is volitile
+      this.camera.cameraLogical.position.copy(this.camera.cameraObject.position);
+      this.camera.cameraLogical.quaternion.copy(this.camera.cameraObject.quaternion);
+      this.camera.cameraLogical.rotation.copy(this.camera.cameraObject.rotation);
+      
       //vt-hack end
       this.controls = new THREE.VRControls(this.camera.cameraObject);
       this.effect = new THREE.VREffect(this.renderer);
@@ -214,13 +224,31 @@ angular.module('vrsketchApp')
       
       var ground = new THREE.Mesh(
         //new THREE.PlaneGeometry( 1000, 1000 ),
-        new THREE.PlaneGeometry( 500, 500 ),
+        //new THREE.PlaneGeometry( 500, 500 ),
+        new THREE.PlaneBufferGeometry( 500, 500 ),
         new THREE.MeshBasicMaterial({map: groundTexture}) );
       ground.rotation.x = -Math.PI / 2;
       //ground.rotation.x = 0.0;
       //this.scene.add(ground);
-      sparseGridBackground.addToScene(this.scene);
+      //sparseGridBackground.addToScene2(this.scene);
+      
+      switch( this.bg.structure) {
+        case 'sparseGrid':
+          sparseGridBackground.addToScene2(this.scene);
+          this.renderer.setClearColor(0x131313, 1.0);
+        break;
+        
+        case 'riftSketch':
+          this.scene.add(ground);
+          this.renderer.setClearColor(0xD3D3D3, 1.0);
+        break;
 
+        default:
+          alert('invalid bg.stucture ' + this.bg.structure + ' specified');
+        break;
+
+      };
+      
       this.initAxes();
 
       // add a fps monitor
@@ -242,8 +270,9 @@ angular.module('vrsketchApp')
       //   //this.rotation = {};
       //   this.rotation_y = 0;
       // };
+      // Do not delete
       // add visual controls      
-      utils.addControls(factory.control);
+      //utils.addControls(factory.control);
 
       // add a light source
       // var light = new THREE.AmbientLight( 0x404040 ); // soft white light
@@ -275,9 +304,9 @@ angular.module('vrsketchApp')
       //lastCameraPos.y = 3.5;
       // we are carrying camera rotation state in the camera itself.  We need to
       // save the last state as controls.update() is desctructive and will overlay it
-      var lastCameraQuaternion = new THREE.Quaternion();
+      // var lastCameraQuaternion = new THREE.Quaternion();
       
-      lastCameraQuaternion.copy(this.camera.cameraObject.quaternion);
+      // lastCameraQuaternion.copy(this.camera.cameraObject.quaternion);
       
       // This basically extracts the rotation and position from the Rift and puts
       // it into the cameras rotation and position.  We previously defined the VRControl
@@ -287,7 +316,11 @@ angular.module('vrsketchApp')
       // here we restore our base position into the camera
       // (we only let the Rift control rotation not position)
       //this.camera.position.copy(this.BasePosition);
-      //vt-xthis.camera.cameraObject.position.copy(this.BasePosition);
+      //this.camera.cameraObject.position.copy(this.BasePosition);
+      this.camera.cameraObject.position.copy(this.camera.cameraLogical.position);
+      //this.camera.cameraState.position.copy(this.camera.cameraObject.position);
+      //this.camera.cameraState.quaternion.copy(this.camera.cameraObject.quaternion);
+
       //this.camera.cameraObject.position.copy( lastCameraPos);
       
       // var rotatedHMDPosition = new THREE.Vector3();
@@ -317,6 +350,15 @@ angular.module('vrsketchApp')
       // now add in the rotation from key presses
       this.camera.cameraObject.rotateOnAxis(new THREE.Vector3(0,1,0), this.BaseRotation.y );
 
+      //vt-x add
+      //this.camera.cameraState.position.copy(this.camera.cameraObject.position);
+      // Note: we are doing "look at" rotation semantics here, not absolute rotation
+      // semantices (we are incorporating the rotation the person is looking when we
+      // move).  Don't know if this is a feature or a limitation.
+      this.camera.cameraLogical.quaternion.copy(this.camera.cameraObject.quaternion);
+      this.camera.cameraLogical.rotation.copy(this.camera.cameraObject.rotation);
+      //vt-x end
+      
       if (this.vrManager.isVRMode()) {
         this.effect.render(this.scene, this.camera.cameraObject);
       }

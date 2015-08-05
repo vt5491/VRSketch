@@ -48,11 +48,11 @@ module.exports = function (grunt) {
           livereload: '<%= connect.options.livereload %>'
         }
       },
-//      jsTest: {
-//        files: ['test/spec/{,*/}*.js'],
+      jsTest: {
+        files: ['test/spec/{,*/}*.js'],
 //        //tasks: ['newer:jshint:test', 'karma']
-//        tasks: ['karma']
-//      },
+        tasks: ['karma']
+      },
       compass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
         tasks: ['compass:server', 'autoprefixer']
@@ -78,8 +78,12 @@ module.exports = function (grunt) {
         port: 9000,
         //port: 8000,
         //port: 8001,
+        //vt add protocol so it starts as https
+        // this works, but you really need a certifcate for it to work as intended
+        //protocol: 'https',
         // Change this to '0.0.0.0' to access the server from outside.
-        hostname: 'localhost',
+        //vthostname: 'localhost',
+        hostname: '0.0.0.0',
         livereload: 35729
         // //vt add
         ,
@@ -457,9 +461,9 @@ module.exports = function (grunt) {
     // Test settings
     karma: {
       unit: {
-//        configFile: 'test/karma.conf.js',
-//        //singleRun: true
-//        singleRun: false
+        configFile: 'test/karma.conf.js',
+        //singleRun: true
+        singleRun: false
           //grunt.log.writeln("please run unit tests with the Gruntfile_test.js file");
       }
     }
@@ -515,6 +519,7 @@ module.exports = function (grunt) {
  //vt add
  grunt.registerTask('karma', function() {
                       grunt.log.writeln('>>>>>>>> please run karma using the Gruntfile_test.js file (--gruntfile parm) <<<<<<<<<<<<');
+                      grunt.log.writeln('>>>>>>>> or run karma outside of grunt: karma start test/karma.conf.js <<<<<<<<<<<<');
                       });
  //vt end
 

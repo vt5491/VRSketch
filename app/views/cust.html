@@ -1,0 +1,17 @@
+<div ng-model="CustCtrl" ng-change="eventHandler">
+  <p>Customization.</p>
+
+  <p>Background Type:</p>
+  <form >
+    <label>
+      <input type="radio" ng-model="bg.structure" value="sparseGrid" checked >
+      Sparse Grid
+    </label><br/>
+    <label>
+      <input type="radio" ng-model="bg.structure" value="riftSketch" >
+      RiftSketch Classic
+    </label><br/>
+    <br><br>
+    <button ng-click="eventHandler()">Submit</button>    
+  </form>
+</div>

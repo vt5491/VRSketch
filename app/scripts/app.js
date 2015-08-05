@@ -12,12 +12,12 @@
  */
 angular
   .module('vrsketchApp', [
-    'ngAnimate',
-    'ngCookies',
-    'ngResource',
+    // 'ngAnimate',
+    // 'ngCookies',
+    // 'ngResource',
     'ngRoute',
-    'ngSanitize',
-    'ngTouch'
+    // 'ngSanitize',
+    // 'ngTouch'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -29,17 +29,22 @@ angular
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
-    //vt add
-      .when('/vrsketchApp', {
-        templateUrl: 'views/vrsketchApp.html',
-        controller: 'VrsketchCtrl'
-      })
+    // //vt add
+    //   .when('/vrsketchApp', {
+    //     templateUrl: 'views/vrsketchApp.html',
+    //     controller: 'VrsketchCtrl'
+    //   })
     //vt end
-      .when('/vrSketch', {
+      .when('/vrsketch', {
         templateUrl: 'views/vrsketch.html',
         controller: 'VrsketchCtrl',
         controllerAs: 'vrSketch'
       })
+      .when('/cust', {
+        templateUrl: 'views/cust.html',
+        controller: 'CustCtrl'
+      })
+    
       .otherwise({
         redirectTo: '/'
       });

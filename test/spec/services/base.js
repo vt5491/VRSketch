@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: base', function () {
+ddescribe('Service: base', function () {
 
   // load the service's module
   beforeEach(module('vrsketchApp'));
@@ -34,6 +34,16 @@ describe('Service: base', function () {
     expect(base.CAMERA_ROT_DELTA).toEqual(10);
   });
 
+  it('base colors are defined', function() {
+    expect(base.COLOR_YELLOW.r).toEqual(100);
+    expect(base.COLOR_YELLOW.g).toEqual(255);
+    expect(base.COLOR_GREEN.r).toEqual(0);
+    expect(base.COLOR_GREEN.g).toEqual(255);
+    expect(base.COLOR_BLUE.r).toEqual(0);
+    expect(base.COLOR_BLUE.b).toEqual(255);
+    
+  });
+  
   //vt end
 
 });

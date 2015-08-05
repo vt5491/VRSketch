@@ -111,7 +111,7 @@ describe('Service: index', function () {
         return false;
       };
 
-      console.log('ut: try: index.renderer=' + index.renderer);
+      //console.log('ut: try: index.renderer=' + index.renderer);
     }));
       
     it('initScene works', function() {

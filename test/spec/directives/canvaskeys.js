@@ -113,7 +113,7 @@ describe('Directive: canvasKeys', function () {
     // console.log("keys(element)=" + Object.keys(element));
     // var el = element.find('canvas');
     // console.log("keys(el)=" + Object.keys(el));
-    console.log("hello");
+    //console.log("hello");
 
     //w 
     triggerKeyEvent(element, 87, 'keydown');

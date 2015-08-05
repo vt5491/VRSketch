@@ -41,6 +41,11 @@ angular.module('vrsketchApp')
 
     factory.lookAtDirection = new THREE.Vector3(0, 0, -1);
 
+    // cameraLogical keeps track of base rotation and position of our "logical" camera.
+    // 'cameraObject' is the physical camera, and we use input of the logical camera
+    // plus position data from the HMD, to generate the physical camera state
+    factory.cameraLogical = new THREE.Object3D();
+    
     return factory;
   });
 

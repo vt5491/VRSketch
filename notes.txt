@@ -13,3 +13,8 @@ when running with grunt serve, start it in the root folder (the one with Gruntfi
 2015-07-22
 When genning something with yo, start in the directory that has the Gruntfile.js in it
 e.g the main root folder, not the app folder.
+
+2015-07-28
+don't use grunt to run karma under linux.  Use this instead:
+
+karma start test/karma.conf.js

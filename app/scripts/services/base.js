@@ -29,7 +29,12 @@ angular.module('vrsketchApp')
 
     factory.CAMERA_MOVE_DELTA = 0.2;
     // CAMERA_ROT_DELTA is in degrees
-    factory.CAMERA_ROT_DELTA = 10; 
+    factory.CAMERA_ROT_DELTA = 10;
+
+    //Colors
+    factory.COLOR_YELLOW = new THREE.Color(100,255,0);
+    factory.COLOR_GREEN = new THREE.Color(0,255,0);
+    factory.COLOR_BLUE = new THREE.Color(0,0,255);
     
     return factory;
   });

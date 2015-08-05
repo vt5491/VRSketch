@@ -40,6 +40,7 @@ module.exports = function(config) {
       "test/spec/**/*.js",
       //vt add
       "app/lib/*.js",
+      'node_modules/jasmine-expect/dist/jasmine-matchers.js',
       //vt end
     ],
 
@@ -74,13 +75,14 @@ module.exports = function(config) {
       //vt add
       "karma-chrome-launcher",
       "karma-firefox-launcher",
+      "karma-jasmine-matchers",
       //vt end
     ],
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    //singleRun: false,
-    singleRun: true,
+    singleRun: false,
+    //singleRun: true,
 
     colors: true,
 
