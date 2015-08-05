@@ -29,12 +29,6 @@ angular
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
-    // //vt add
-    //   .when('/vrsketchApp', {
-    //     templateUrl: 'views/vrsketchApp.html',
-    //     controller: 'VrsketchCtrl'
-    //   })
-    //vt end
       .when('/vrsketch', {
         templateUrl: 'views/vrsketch.html',
         controller: 'VrsketchCtrl',
