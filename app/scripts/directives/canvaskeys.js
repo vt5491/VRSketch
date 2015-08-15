@@ -22,33 +22,55 @@ angular.module('vrsketchApp')
           switch( event.keyCode) {
             case 'S'.charCodeAt(0):
 
-            VrsketchService.camera.cameraLogical.translateZ(base.CAMERA_MOVE_DELTA);
+            //VrsketchService.camera.cameraLogical.translateZ(base.CAMERA_MOVE_DELTA);
+            VrsketchService.camera.cameraLogical.translateX(-base.CAMERA_MOVE_DELTA);
             
             break;
             case 'W'.charCodeAt(0):
  
-              VrsketchService.camera.cameraLogical.translateZ(-base.CAMERA_MOVE_DELTA);
+              //VrsketchService.camera.cameraLogical.translateZ(-base.CAMERA_MOVE_DELTA);
+              VrsketchService.camera.cameraLogical.translateX(base.CAMERA_MOVE_DELTA);
 
               break;
             case 'A'.charCodeAt(0):
  
-              VrsketchService.camera.cameraLogical.translateX(-base.CAMERA_MOVE_DELTA);
+              //VrsketchService.camera.cameraLogical.translateX(-base.CAMERA_MOVE_DELTA);
+              VrsketchService.camera.cameraLogical.translateZ(-base.CAMERA_MOVE_DELTA);
 
             break;
             case 'D'.charCodeAt(0):
 
-              VrsketchService.camera.cameraLogical.translateX(base.CAMERA_MOVE_DELTA);
+              //VrsketchService.camera.cameraLogical.translateX(base.CAMERA_MOVE_DELTA);
+              VrsketchService.camera.cameraLogical.translateZ(base.CAMERA_MOVE_DELTA);
 
               break;
 
             case 'Q'.charCodeAt(0):
               
-              VrsketchService.BaseRotation.y +=  base.ONE_DEGREE * base.CAMERA_ROT_DELTA;
+              //VrsketchService.BaseRotation.y +=  base.ONE_DEGREE * base.CAMERA_ROT_DELTA;
+              //VrsketchService.camera.cameraLogical.rotateOnAxis(
+              // VrsketchService.camera.cameraObject.rotateOnAxis(
+              //  new THREE.Vector3(0,1,0), base.ONE_DEGREE * base.CAMERA_ROT_DELTA);
+              //tmpQuat = new Quaternion().setFromAxisAngle ( axis, angle );
+              var tmpQuat = new THREE.Quaternion().setFromAxisAngle ( new THREE.Vector3(0,1,0), base.ONE_DEGREE * base.CAMERA_ROT_DELTA );
+              //VrsketchService.BaseRotation.multiply(tmpQuat);
+              VrsketchService.BaseRotation.multiplyQuaternions(VrsketchService.BaseRotation, tmpQuat);
+
+              //VrsketchService.camera.cameraLogical.rotation.y +=  base.ONE_DEGREE * base.CAMERA_ROT_DELTA;
+              VrsketchService.camera.cameraLogical.quaternion.multiply(tmpQuat);
 
             break;
             
             case 'E'.charCodeAt(0):
-              VrsketchService.BaseRotation.y = VrsketchService.BaseRotation.y - base.ONE_DEGREE * base.CAMERA_ROT_DELTA;
+              //VrsketchService.BaseRotation.y = VrsketchService.BaseRotation.y - base.ONE_DEGREE * base.CAMERA_ROT_DELTA;
+              //VrsketchService.BaseRotation.y -=  base.ONE_DEGREE * base.CAMERA_ROT_DELTA;
+              var tmpQuat = new THREE.Quaternion().setFromAxisAngle ( new THREE.Vector3(0,1,0), -base.ONE_DEGREE * base.CAMERA_ROT_DELTA );
+              //VrsketchService.BaseRotation.multiply(tmpQuat);
+              VrsketchService.BaseRotation.multiplyQuaternions(VrsketchService.BaseRotation, tmpQuat);
+
+              //VrsketchService.camera.cameraLogical.rotation.y -=  base.ONE_DEGREE * base.CAMERA_ROT_DELTA;
+              VrsketchService.camera.cameraLogical.quaternion.multiply(tmpQuat);
+            
             break;
             case 'P'.charCodeAt(0):
 

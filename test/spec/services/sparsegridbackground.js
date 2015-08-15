@@ -25,7 +25,7 @@ describe('Service: sparseGridBackground', function () {
     
     expect(result).toBeTruthy();
     expect(result).toBeArray();
-    expect(result.length).toEqual(8);
+    expect(result.length).toEqual(18);
     
   });
   

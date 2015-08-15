@@ -1,0 +1,15 @@
+{
+    "title": "simplex",
+    "nodes": [
+    { "name": "cm", "x": 0, "y": 0, "z": 0},
+    { "name": "head", "x": 0, "y": 0, "z": 2},
+    { "name": "left_tail", "x": -1, "y": 0, "z": -1},
+    { "name": "right_tail", "x": 1, "y": 0, "z": -1}
+    ],
+    "edge_color": "green",
+    "edges": [
+           { "node1Name": "head", "node2Name": "left_tail"},
+           { "node1Name": "left_tail", "node2Name": "right_tail"},
+           { "node1Name": "right_tail", "node2Name": "head"} 
+    ]
+}

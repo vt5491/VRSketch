@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: canvasKeys', function () {
+describe('Directive: canvasKeys', function () { 
 
     var element,
         scope,
@@ -14,9 +14,12 @@ describe('Directive: canvasKeys', function () {
   mockVrsketchService.camera = {};
   mockVrsketchService.camera.cameraObject = {};
   //mockVrsketchService.camera.cameraObject.position = new THREE.Vector3(0, 3.5, cameraPos.z);
-  mockVrsketchService.camera.cameraObject.position = null;
-  mockVrsketchService.camera.cameraObject.rotation = null;
-
+  //mockVrsketchService.camera.cameraObject.position = null;
+  //mockVrsketchService.camera.cameraObject.rotation = null;
+  
+  mockVrsketchService.camera.cameraLogical = new THREE.Object3D();
+ // mockVrsketchService.camera.cameraLogical.position = null;
+  //mockVrsketchService.camera.cameraLogical.rotation = null;  
 //   var e = new KeyboardEvent("keydown", {
 //     bubbles : true,
 //     cancelable : true,
@@ -48,22 +51,23 @@ describe('Directive: canvasKeys', function () {
     mockVrsketchService.BasePosition = new THREE.Vector3(0,0,0);
     mockVrsketchService.BaseRotation = new THREE.Euler(0,0,0, 'XYZ');
     //mockVrsketchService.camera.cameraObject = new THREE.PerspectiveCamera( 75, this.width / this.height, 1, 10000);
-    mockVrsketchService.camera.cameraObject.position = new THREE.Vector3(0, 3.5, cameraPos.z);
-    mockVrsketchService.camera.cameraObject.rotation = new THREE.Euler( 0, 0, 0, 'XYZ' );
+    //mockVrsketchService.camera.cameraObject.position = new THREE.Vector3(0, 3.5, cameraPos.z);
+   // mockVrsketchService.camera.cameraLogical.position = new THREE.Vector3(0, 0, cameraPos.z);
+    //mockVrsketchService.camera.cameraLogical.rotation = new THREE.Euler( 0, 0, 0, 'XYZ' );
 
-    mockVrsketchService.camera.cameraObject.translateZ = function (val) {
+    mockVrsketchService.camera.cameraLogical.translateZ = function (val) {
       //console.log("now in mock translateZ, val=" + val);
       this.position.z = val;
-    //}.bind(mockVrsketchService.camera.cameraObject);
+    //}.bind(mockVrsketchService.camera.cameraLogical);
     };
     
-    mockVrsketchService.camera.cameraObject.translateX = function (val) {
+    mockVrsketchService.camera.cameraLogical.translateX = function (val) {
       //console.log("now in mock translateX, val=" + val);
       this.position.x = val;
-    //}.bind(mockVrsketchService.camera.cameraObject);
+    //}.bind(mockVrsketchService.camera.cameraLogical);
     };
 
-    mockVrsketchService.camera.cameraObject.translateY = function (val) {
+    mockVrsketchService.camera.cameraLogical.translateY = function (val) {
       //console.log("now in mock translateX, val=" + val);
       this.position.y = val;
     };
@@ -120,7 +124,8 @@ describe('Directive: canvasKeys', function () {
     //expect(mockVrsketchService.camera.cameraObject.position.z).toEqual(cameraPos.z + 1);
     // console.log("canvaskeys.js<spec>: mockVrsketchService.BasePosition.z=" + mockVrsketchService.BasePosition.z);
     //expect(mockVrsketchService.BasePosition.z).toEqual(-base.CAMERA_MOVE_DELTA);
-    expect(mockVrsketchService.camera.cameraObject.position.z).toEqual(-base.CAMERA_MOVE_DELTA);
+    //expect(mockVrsketchService.camera.cameraObject.position.z).toEqual(-base.CAMERA_MOVE_DELTA);
+    expect(mockVrsketchService.camera.cameraLogical.position.z).toEqual( -base.CAMERA_MOVE_DELTA);
   }));
 
   it('camera moves backwards when s is pressed', inject(function () {
@@ -129,7 +134,8 @@ describe('Directive: canvasKeys', function () {
     //console.log("mockVrsketchService.BasePosition.x=" + mockVrsketchService.BasePosition.x + ",mockVrsketchService.BasePosition.z=" + mockVrsketchService.BasePosition.z);
     //expect(mockVrsketchService.camera.cameraObject.position.z).toEqual(cameraPos.z - 1);
     //expect(mockVrsketchService.BasePosition.z).toEqual(1);
-    expect(mockVrsketchService.camera.cameraObject.position.z).toEqual(base.CAMERA_MOVE_DELTA);
+    //expect(mockVrsketchService.camera.cameraObject.position.z).toEqual(base.CAMERA_MOVE_DELTA);
+    expect(mockVrsketchService.camera.cameraLogical.position.z).toEqual(base.CAMERA_MOVE_DELTA);
   }));
 
   it('camera moves left when a is pressed', inject(function () {
@@ -138,7 +144,7 @@ describe('Directive: canvasKeys', function () {
     
     //expect(mockVrsketchService.camera.cameraObject.position.z).toEqual(cameraPos.z - 1);
     //expect(mockVrsketchService.BasePosition.x).toEqual(-1);
-    expect(mockVrsketchService.camera.cameraObject.position.x).toEqual(-base.CAMERA_MOVE_DELTA);
+    expect(mockVrsketchService.camera.cameraLogical.position.x).toEqual(-base.CAMERA_MOVE_DELTA);
   }));
 
   it('camera moves right when d is pressed', inject(function () {
@@ -146,7 +152,8 @@ describe('Directive: canvasKeys', function () {
     triggerKeyEvent(element, 68, 'keydown');
     
     //expect(mockVrsketchService.BasePosition.x).toEqual(1);
-    expect(mockVrsketchService.camera.cameraObject.position.x).toEqual(base.CAMERA_MOVE_DELTA);
+    //expect(mockVrsketchService.camera.cameraObject.position.x).toEqual(base.CAMERA_MOVE_DELTA);
+    expect(mockVrsketchService.camera.cameraLogical.position.x).toEqual(base.CAMERA_MOVE_DELTA);
   }));
   
   it('camera rotates to left when q is pressed', inject(function () {
@@ -167,14 +174,14 @@ describe('Directive: canvasKeys', function () {
     //p
     triggerKeyEvent(element, 80, 'keydown');
     
-    expect(mockVrsketchService.camera.cameraObject.position.y).toEqual(base.CAMERA_MOVE_DELTA);
+    expect(mockVrsketchService.camera.cameraLogical.position.y).toEqual(base.CAMERA_MOVE_DELTA);
   }));
 
   it('camera moves down when n is pressed', inject(function () {
     //n
     triggerKeyEvent(element, 78, 'keydown');
     
-    expect(mockVrsketchService.camera.cameraObject.position.y).toEqual(-base.CAMERA_MOVE_DELTA);
+    expect(mockVrsketchService.camera.cameraLogical.position.y).toEqual(-base.CAMERA_MOVE_DELTA);
   }));
   
   it('camera returns to base position and rotation when r is pressed', inject(function () {

@@ -67,7 +67,10 @@ module.exports = function (grunt) {
         files: [
           '<%= yeoman.app %>/{,*/}*.html',
           '.tmp/styles/{,*/}*.css',
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+          //vt add
+          '<%= yeoman.app %>/config/{,*/}*.json'
+          //vt end
         ]
       }
     },
@@ -178,6 +181,13 @@ module.exports = function (grunt) {
         src: ['test/spec/{,*/}*.js']
       }
     },
+    //vt add
+    jsonlint: {
+        sample: {
+        src: [ '<%= yeoman.app %>/config/birdies/*.json' ]
+        }
+    },
+    //vt end
 
     // Empties folders to start fresh
     clean: {

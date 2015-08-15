@@ -1,6 +1,6 @@
 'use strict';
 
-ddescribe('Service: base', function () {
+describe('Service: base', function () {
 
   // load the service's module
   beforeEach(module('vrsketchApp'));
