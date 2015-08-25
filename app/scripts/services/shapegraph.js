@@ -31,12 +31,12 @@ angular.module('vrsketchApp')
     };
 
     shapeGraph.prototype.abc = function() {
-      console.log("shapeGraph.abc: hello");
+      //console.log("shapeGraph.abc: hello");
       return 7;
     };
 
     shapeGraph.prototype.debug = function(tgtVar) {
-      console.log("shapeGraph.debug: hello, tgtVar=" + tgtVar);
+      //console.log("shapeGraph.debug: hello, tgtVar=" + tgtVar);
 
       this.parseJson('config/birdies/simplex.json', tgtVar);
 
@@ -47,20 +47,20 @@ angular.module('vrsketchApp')
 
     //Defunct
     shapeGraph.prototype.parseJson = function(url, tgtVar) {
-      console.log("entered parseJson, tgtVar=" + tgtVar);
+      //console.log("entered parseJson, tgtVar=" + tgtVar);
       $http.get('config/birdies/simplex.json')
         .then(function(res){
           //$scope.todos = res.data;
-          console.log("parseJson: promise handler: tgtVar=" + tgtVar);
-          console.log("parseJson: res.data.title=" + res.data.title);
-          console.log("parseJson: res.data.nodes[0].name=" + res.data.nodes[0].name);
+          // console.log("parseJson: promise handler: tgtVar=" + tgtVar);
+          // console.log("parseJson: res.data.title=" + res.data.title);
+          // console.log("parseJson: res.data.nodes[0].name=" + res.data.nodes[0].name);
 
           var graph = new shapeGraph(res.data.nodes, res.data.edges);
-          console.log("parseJson: promise handler: graph=" + graph);
+          //console.log("parseJson: promise handler: graph=" + graph);
 
           //return graph;
           tgtVar = graph;
-          console.log("parseJson: promise handler: tgtVar=" + tgtVar);
+          //console.log("parseJson: promise handler: tgtVar=" + tgtVar);
         });
     };
 
@@ -78,10 +78,10 @@ angular.module('vrsketchApp')
 
     // this adds an edge to a scene
     // TODO: rename 'scene' to 'group' thoughout this module
-    shapeGraph.prototype.addEdge = function(edge, color, scene) {
+    shapeGraph.prototype.addEdge = function(edge, group) {
       var node1Name = edge.node1Name,
-          node2Name = edge.node2Name;
-      //    color = edge.color;
+          node2Name = edge.node2Name,
+          color = edge.color;
       //    scene = edge.scene;
       var line, lineMaterial, lineGeometry;
 
@@ -89,22 +89,47 @@ angular.module('vrsketchApp')
       var node2 = this.getNodeByName(node2Name);
 
       //TODO: offset is defunct, because we do it at the group level now.
-      var offset = new THREE.Vector3(0,0,0);
+      //var offset = new THREE.Vector3(0,0,0);
       //this.edges.push({node1: node1, node2: node2, color: color});
+      //console.log("shapegraph.addEdge: color=" + color);
 
       lineMaterial = new THREE.LineBasicMaterial();
-      lineMaterial.color = new THREE.Color(255,0,0);
+
+      switch(color) {
+        case 'red':
+          lineMaterial.color = new THREE.Color(255,0,0);
+        break;
+
+        case 'green':
+          lineMaterial.color = new THREE.Color(0,255,0);
+        break;
+
+        case 'blue':
+          lineMaterial.color = new THREE.Color(0,0,255);
+        break;
+
+        case 'yellow':
+          lineMaterial.color = new THREE.Color(128,128,0);
+        break;
+        
+        default:
+          lineMaterial.color = new THREE.Color(255,0,0);
+        break;
+
+      };
+
+      //lineMaterial.color = new THREE.Color(255,0,0);
 
       lineGeometry = new THREE.Geometry();
 
       // lineGeometry.vertices.push( THREE.Vector3.addVectors(new THREE.Vector3(node1.x, node1.y, node1.z), offset));
       // lineGeometry.vertices.push( THREE.Vector3.addVectors(new THREE.Vector3(node2.x, node2.y, node2.z), offset));
-      lineGeometry.vertices.push( new THREE.Vector3(node1.x + offset.x, node1.y + offset.y, node1.z + offset.z));
-      lineGeometry.vertices.push( new THREE.Vector3(node2.x + offset.x, node2.y + offset.y, node2.z + offset.z));
+      lineGeometry.vertices.push( new THREE.Vector3(node1.x, node1.y, node1.z));
+      lineGeometry.vertices.push( new THREE.Vector3(node2.x, node2.y, node2.z));
 
       line = new THREE.Line(lineGeometry, lineMaterial);
 
-      scene.add(line);
+      group.add(line);
 
       //vt-hack
       // var mesh = new THREE.Mesh( new THREE.PlaneGeometry(5, 10), new THREE.MeshBasicMaterial({color: 'green'}));
@@ -119,13 +144,13 @@ angular.module('vrsketchApp')
     
     // sychronize the shapeGraph to the scene.  This is mostly just used to initliaze
     // the scene, but it's general enough to called idempotently.
-    shapeGraph.prototype.sceneSync = function(scene) {
+    shapeGraph.prototype.addToGroup = function(group) {
       var edgesLength = this.edges.length;
       
       for (var i = 0; i < edgesLength; i++) {
         //this.prototype.addEdge(edge, this.edge_color, scene);
-        this.addEdge(this.edges[i], this.edge_color, scene);
-        console.log("sceneSync: added edge=" + this.edges[i].node1Name);
+        this.addEdge(this.edges[i], group);
+        //console.log("groupSync: added edge=" + this.edges[i].node1Name);
       } 
       // this.edges.forEach(function (edge) {
       //   this.prototype.addEdge(edge, this.edge_color, scene);

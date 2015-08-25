@@ -1,0 +1,55 @@
+# note: generate the json using js-yaml blah.yaml > blah.json
+# Note: left is actaully what I would consider right and vice-versa
+title: "sorrowed_little_wing"
+nodes:  
+  #- {name: "cm", x:0, y:0, z:0}
+  - {name: cm, x: 0, y: 0, z: 0}
+  #- {name: "body_head_left", x:-1.50, y:0, z: 1.5}
+  - {name: "body_head_left", x: -0.25, y: 0, z: 1.5}
+  - {name: "body_head_right", x: 0.25, y: 0, z: 1.5}
+  #x- {name: "body_head_front", x: 0, y: -0.25, z: 2}
+  - {name: "body_head_front", x: 0, y: -0.25, z: 2}
+  # left tail
+  - {name: "left_tail_left", x: -0.5, y: 0, z: -1}
+  - {name: "left_tail_right", x: -0.616, y: 0, z: -0.68}
+  - {name: "left_tail_tip", x: -1, y: -0.25, z: -1}  
+#  - {name: "right_tail_left", x: 1, y: 0, z: -0.75}
+  # right tail
+  - {name: "right_tail_left", x: 0.5, y: 0, z: -1}
+  - {name: "right_tail_right", x: 0.616, y: 0, z: -0.68}
+  - {name: "right_tail_tip", x: 1, y: -0.25, z: -1}
+  # rudder
+  - {name: "rudder_head", x: 0, y: 0, z: -0.25}
+  - {name: "rudder_tail", x: 0, y: 0, z: -0.5}
+  - {name: "rudder_top", x: 0, y: 0.5, z: -0.5}
+edges:
+   # nose tip
+  - {node1Name: "body_head_left", node2Name: "body_head_right", color: green}
+  - {node1Name: "body_head_front", node2Name: "body_head_left", color: blue}
+  - {node1Name: "body_head_front", node2Name: "body_head_right",color: red}
+  # body
+  - {node1Name: "body_head_left", node2Name: "left_tail_right"}
+  - {node1Name: "left_tail_right", node2Name: "left_tail_left"}
+  # bottom connecting bar
+  - {node1Name: "right_tail_left", node2Name: "left_tail_left"}
+  
+  - {node1Name: "body_head_right", node2Name: "right_tail_right"}
+  - {node1Name: "right_tail_right", node2Name: "right_tail_left"}
+  # left tip
+  - {node1Name: "left_tail_tip", node2Name: "left_tail_right"}
+  - {node1Name: "left_tail_tip", node2Name: "left_tail_left"}  
+  # right tip
+  - {node1Name: "right_tail_tip", node2Name: "right_tail_right"}
+  - {node1Name: "right_tail_tip", node2Name: "right_tail_left"}  
+
+  # rudder
+  # - {node1Name: "right_tail", node2Name: "body_head_left"} 
+  - {node1Name: "rudder_head", node2Name: "rudder_tail"} 
+  - {node1Name: "rudder_tail", node2Name: "rudder_top"} 
+  - {node1Name: "rudder_top", node2Name: "rudder_head"} 
+
+
+  
+    
+
+  

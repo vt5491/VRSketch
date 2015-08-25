@@ -19,29 +19,31 @@ angular.module('vrsketchApp')
           // prevent browser from handling as well
           event.preventDefault();
 
+          // Note: there are two pairs for each keypress.  The first line seems to work
+          // in scruz and the second in svale.  Have no idea why
           switch( event.keyCode) {
             case 'S'.charCodeAt(0):
 
-            //VrsketchService.camera.cameraLogical.translateZ(base.CAMERA_MOVE_DELTA);
-            VrsketchService.camera.cameraLogical.translateX(-base.CAMERA_MOVE_DELTA);
+            VrsketchService.camera.cameraLogical.translateZ(base.CAMERA_MOVE_DELTA);
+            //VrsketchService.camera.cameraLogical.translateX(-base.CAMERA_MOVE_DELTA);
             
             break;
             case 'W'.charCodeAt(0):
  
-              //VrsketchService.camera.cameraLogical.translateZ(-base.CAMERA_MOVE_DELTA);
-              VrsketchService.camera.cameraLogical.translateX(base.CAMERA_MOVE_DELTA);
+              VrsketchService.camera.cameraLogical.translateZ(-base.CAMERA_MOVE_DELTA);
+              //VrsketchService.camera.cameraLogical.translateX(base.CAMERA_MOVE_DELTA);
 
               break;
             case 'A'.charCodeAt(0):
  
-              //VrsketchService.camera.cameraLogical.translateX(-base.CAMERA_MOVE_DELTA);
-              VrsketchService.camera.cameraLogical.translateZ(-base.CAMERA_MOVE_DELTA);
+              VrsketchService.camera.cameraLogical.translateX(-base.CAMERA_MOVE_DELTA);
+              //VrsketchService.camera.cameraLogical.translateZ(-base.CAMERA_MOVE_DELTA);
 
             break;
             case 'D'.charCodeAt(0):
 
-              //VrsketchService.camera.cameraLogical.translateX(base.CAMERA_MOVE_DELTA);
-              VrsketchService.camera.cameraLogical.translateZ(base.CAMERA_MOVE_DELTA);
+              VrsketchService.camera.cameraLogical.translateX(base.CAMERA_MOVE_DELTA);
+              //VrsketchService.camera.cameraLogical.translateZ(base.CAMERA_MOVE_DELTA);
 
               break;
 

@@ -31,7 +31,17 @@ angular.module('vrsketchApp')
    factory.canvas = null;
    factory.camera = camera;
    factory.shapeGraph = null;
+   factory.yzProjectionPlane = null;
+   
+   factory.xyProjectionPlane = null;
+   factory.xyProjectionMesh = null;
 
+   factory.xzProjectionPlane = null;
+   factory.xzProjectionMesh = null;
+
+   factory.yzProjectionPlane = null;
+   factory.yzProjectionMesh = null;
+   
    // these have to be function scope variables because they are set via
    // or need to be accessed from asynchronous callbacks.
    var scene;
@@ -40,12 +50,22 @@ angular.module('vrsketchApp')
    var birdyGroups = [];
    birdyGroups.push(new THREE.Object3D());
    birdyGroups.push(new THREE.Object3D());
+   birdyGroups.push(new THREE.Object3D());
+
+   var birdyGroupClone = new THREE.Object3D();
+   var birdyGroupShadowXY = new THREE.Object3D();
+   var birdyGroupShadowXZ = new THREE.Object3D();
+   var birdyGroupShadowYZ = new THREE.Object3D();
    //this.scene = scene;
-   var littleWingShapeGraph;
-   var simplexBirdyShapeGraph;
+   var littleWingShapeGraph, simplexBirdyShapeGraph, sorrowedLittleWingShapeGraph;
+   
    //var myShapeGraph2;
    var birdyGroupRotQuat = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,1,0), base.ONE_DEGREE * 0.2 );
    var birdyGroupRotQuat2 = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,1,0), -base.ONE_DEGREE * 0.2 );
+   var birdyGroupRotQuat3 = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,1,0), -base.ONE_DEGREE * 0.2 );
+
+   var rotXQuat = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(1,0,0), -base.ONE_DEGREE * 0.2 );
+   var rotYQuat = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,1,0), -base.ONE_DEGREE * 0.2 );
    
    factory.bg = {
      structure: 'sparseGrid'
@@ -64,7 +84,9 @@ angular.module('vrsketchApp')
 
    // setup some pointer info at the axes
    factory.initAxes = function() {
-     var lineGeometry, lineMaterial;
+     var lineGeometry, lineMaterial, axes;
+
+     axes = new THREE.Object3D();
      
      // x-axis
      lineMaterial = new THREE.LineBasicMaterial();
@@ -77,7 +99,7 @@ angular.module('vrsketchApp')
 
      this.xAxisLine = new THREE.Line(lineGeometry, lineMaterial);
 
-     scene.add(this.xAxisLine);
+     axes.add(this.xAxisLine);
      
      // y-axis
      lineMaterial = new THREE.LineBasicMaterial();
@@ -90,7 +112,7 @@ angular.module('vrsketchApp')
 
      this.yAxisLine = new THREE.Line(lineGeometry, lineMaterial);
 
-     scene.add(this.yAxisLine);
+     axes.add(this.yAxisLine);
 
      // z-axis
      lineMaterial = new THREE.LineBasicMaterial();
@@ -103,7 +125,16 @@ angular.module('vrsketchApp')
 
      this.zAxisLine = new THREE.Line(lineGeometry, lineMaterial);
 
-     scene.add(this.zAxisLine);        
+     axes.add(this.zAxisLine);
+
+     scene.add(axes);
+
+     // create a copy below the plane too
+     var axesAlt = axes.clone();
+
+     axesAlt.position.set(0, -3 ,0);
+
+     scene.add(axesAlt);
    };
    
    
@@ -170,22 +201,6 @@ angular.module('vrsketchApp')
 
      this.vrManager = new WebVRManager(this.renderer, this.effect);
      
-     var maxAnisotropy = this.renderer.getMaxAnisotropy();
-     //linux
-     var groundTexture = THREE.ImageUtils.loadTexture('images/background.png');
-     // windows
-     var gridSize = 50
-     groundTexture.anisotropy = maxAnisotropy;
-     groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-     groundTexture.repeat.set( gridSize, gridSize );
-     
-     groundTexture.minFilter = THREE.NearestFilter;
-     
-     var ground = new THREE.Mesh(
-       new THREE.PlaneBufferGeometry( gridSize, gridSize ),
-       new THREE.MeshBasicMaterial({map: groundTexture}) );
-     ground.rotation.x = -Math.PI / 2;
-     
      switch( this.bg.structure) {
      case 'sparseGrid':
        sparseGridBackground.addToScene2(scene);
@@ -193,9 +208,25 @@ angular.module('vrsketchApp')
        break;
        
      case 'riftSketch':
+       var maxAnisotropy = this.renderer.getMaxAnisotropy();
+       //linux
+       var groundTexture = THREE.ImageUtils.loadTexture('images/background.png');
+       // windows
+       var gridSize = 50
+       groundTexture.anisotropy = maxAnisotropy;
+       groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
+       groundTexture.repeat.set( gridSize, gridSize );
+       
+       groundTexture.minFilter = THREE.NearestFilter;
+       
+       var ground = new THREE.Mesh(
+         new THREE.PlaneBufferGeometry( gridSize, gridSize ),
+         new THREE.MeshBasicMaterial({map: groundTexture}) );
+       ground.rotation.x = -Math.PI / 2;
+       
        scene.add(ground);
        this.renderer.setClearColor(0xD3D3D3, 1.0);
-       break;
+     break;
 
      default:
        alert('invalid bg.stucture ' + this.bg.structure + ' specified');
@@ -221,9 +252,57 @@ angular.module('vrsketchApp')
      // var light = new THREE.AmbientLight( 0x404040 ); // soft white light
      // scene.add( light );
      
-     var light = new THREE.PointLight( 0xff0000, 1, 100 );
-     light.position.set( 0, 0, 10 );
-     scene.add( light );
+     // var light = new THREE.PointLight( 0xff0000, 1, 100 );
+     // light.position.set( 0, 0, 10 );
+     // scene.add( light );
+
+     var geometry, material;
+     //, lineGeometry, lineMaterial;
+     // xy projection group
+     this.xyProjectionPlane = new THREE.Object3D();
+     
+     geometry = new THREE.PlaneGeometry( 4,2 );
+     material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+
+     this.xyProjectionMesh = new THREE.Mesh( geometry, material );
+     this.xyProjectionPlane.add(this.xyProjectionMesh);
+
+     //plane.position = new THREE.Vector3(0,0, -2);
+     this.xyProjectionPlane.position.set(0, 1, -8);
+     
+     scene.add(this.xyProjectionPlane);
+
+     // xz projection group
+     this.xzProjectionPlane = new THREE.Object3D();
+     
+     geometry = new THREE.PlaneGeometry( 4,4 );
+     material = new THREE.MeshBasicMaterial( {color: 0x00ffff, side: THREE.DoubleSide} );
+
+     this.xzProjectionMesh = new THREE.Mesh( geometry, material );
+     this.xzProjectionPlane.add(this.xzProjectionMesh);
+
+     
+     //plane.position = new THREE.Vector3(0,0, -2);
+     this.xzProjectionPlane.position.set(0, 4, -8);
+     
+     scene.add(this.xzProjectionPlane);
+
+     // yz projection group
+     this.yzProjectionPlane = new THREE.Object3D();
+     
+     geometry = new THREE.PlaneGeometry( 4,2 );
+     material = new THREE.MeshBasicMaterial( {color: 0xffa500, side: THREE.DoubleSide} );
+
+     this.yzProjectionMesh = new THREE.Mesh( geometry, material );
+     this.yzProjectionPlane.add(this.yzProjectionMesh);
+
+     
+     //plane.position = new THREE.Vector3(0,0, -2);
+     this.yzProjectionPlane.position.set(4, 1, -8);
+     
+     scene.add(this.yzProjectionPlane);
+     
+     //scene.add(birdyGroupClone2);
    };
 
    factory.control = new function () {
@@ -262,14 +341,14 @@ angular.module('vrsketchApp')
      //promise = asyncShapeGraph('config/birdies/simplex.json');
      promise = asyncShapeGraph('config/birdies/little_wing.json');
 
-     //console.log("vrsketchservice.initShapeGraph: calling promise");
+     //console.log("vrsketchservice.initiShapeGraph: calling promise");
      promise.then(function(graph) {
        //console.log('Success: graph=' + graph);
        //this.shapeGraph = graph;
        littleWingShapeGraph = graph;
 
        //simplexBirdyShapeGraph.sceneSync(scene);
-       littleWingShapeGraph.sceneSync(birdyGroups[0]);
+       littleWingShapeGraph.addToGroup(birdyGroups[0]);
        scene.add(birdyGroups[0]);
      }, function(reason) {
        console.log('Failed: ' + reason);
@@ -286,7 +365,7 @@ angular.module('vrsketchApp')
        
        simplexBirdyShapeGraph = graph;
 
-       simplexBirdyShapeGraph.sceneSync(birdyGroups[1]);
+       simplexBirdyShapeGraph.addToGroup(birdyGroups[1]);
        scene.add(birdyGroups[1]);
      }, function(reason) {
        console.log('Failed: ' + reason);
@@ -295,6 +374,40 @@ angular.module('vrsketchApp')
      // do a global position change on the birdyGroup
      birdyGroups[1].position.z -= 3;
      birdyGroups[1].position.y += 3;
+
+     // get third shapeGraph
+     promise = asyncShapeGraph('config/birdies/sorrowed_little_wing.json');
+     
+     promise.then(function(graph) {
+       sorrowedLittleWingShapeGraph = graph;
+
+       sorrowedLittleWingShapeGraph.addToGroup(birdyGroups[2]);
+       scene.add(birdyGroups[2]);
+
+       // birdyGroupClone = birdyGroups[2].clone();
+       // //birdyGroupClone.position.set(factory.xyProjectionMesh.position);
+       // birdyGroupClone.position.set(0,0,0);
+       // factory.xyProjectionMesh.add(birdyGroupClone);
+
+       //sorrowedLittleWingShapeGraph.addToGroup(factory.xyProjectionMesh);
+       sorrowedLittleWingShapeGraph.addToGroup(birdyGroupClone);
+       birdyGroupClone.position.set(0,0,0);
+       //factory.xyProjectionMesh.add(birdyGroupClone);
+       
+     }, function(reason) {
+       console.log('Failed: ' + reason);
+     });
+
+     // do a global position change on the birdyGroup
+     birdyGroups[2].position.z += 3;
+     birdyGroups[2].position.y += 3;
+
+     // var geometry = new THREE.PlaneGeometry( 1, 1 );
+     // var material = new THREE.MeshBasicMaterial( {color: 0x00fff0, side: THREE.DoubleSide} );
+     // var group = new THREE.Object3D();
+     // var mesh = new THREE.Mesh( geometry, material );
+     // group.add(mesh);
+     // this.xyProjectionMesh.add(group);
    };
    
    factory.init = function () {
@@ -353,6 +466,146 @@ angular.module('vrsketchApp')
      // rotate the birdyGroup about the y-axis
      birdyGroups[0].quaternion.multiply(birdyGroupRotQuat);
      birdyGroups[1].quaternion.multiply(birdyGroupRotQuat2);
+     birdyGroups[2].quaternion.multiply(birdyGroupRotQuat3);
+
+     //rotate the ship underneath it about the yaxis
+     //birdyGroupClone.quaternion.multiply(rotYQuat);
+     var m = new THREE.Matrix4();
+     var mat = m.makeRotationY(base.ONE_DEGREE * 0.2);
+     //birdyGroupClone.geometry.applyMaxtrix(mat);
+     //works
+     //birdyGroupClone.applyMatrix(mat);
+     try {
+       for (var i=0; i< birdyGroupClone.children.length; i++) {
+         birdyGroupClone.children[i].geometry.applyMatrix(mat);
+       }
+     }
+     catch(e){
+       console.log('caught error=' + e);
+       return false;
+     }
+
+     //scene.remove(birdyGroupClone2);
+     //birdyGroupClone2 = birdyGroupClone.clone();
+     factory.xyProjectionMesh.remove(birdyGroupShadowXY);
+     birdyGroupShadowXY = new THREE.Object3D();
+
+     factory.xzProjectionMesh.remove(birdyGroupShadowXZ);
+     birdyGroupShadowXZ = new THREE.Object3D();
+
+     factory.yzProjectionMesh.remove(birdyGroupShadowYZ);
+     birdyGroupShadowYZ = new THREE.Object3D();
+     
+     //remove z-component from birdyGroupShadowXY vertices
+     for (var i=0; i< birdyGroupClone.children.length; i++) {
+       var line, lineGeometry, vertex;
+
+       // xy plane
+       lineGeometry = new THREE.Geometry();
+
+       vertex = birdyGroupClone.children[i].geometry.vertices[0];
+       lineGeometry.vertices.push(new THREE.Vector3(vertex.x, vertex.y, 0));
+       
+       vertex = birdyGroupClone.children[i].geometry.vertices[1];
+       lineGeometry.vertices.push(new THREE.Vector3(vertex.x, vertex.y, 0));
+
+       line = new THREE.Line(lineGeometry, birdyGroupClone.children[i].material);
+
+       birdyGroupShadowXY.add(line);
+
+       // xz plane
+       lineGeometry = new THREE.Geometry();
+
+       vertex = birdyGroupClone.children[i].geometry.vertices[0];
+       lineGeometry.vertices.push(new THREE.Vector3(vertex.x, vertex.z, 0));
+       
+       vertex = birdyGroupClone.children[i].geometry.vertices[1];
+       lineGeometry.vertices.push(new THREE.Vector3(vertex.x, vertex.z, 0));
+
+       line = new THREE.Line(lineGeometry, birdyGroupClone.children[i].material);
+
+       birdyGroupShadowXZ.add(line);       
+
+       // yz plane
+       lineGeometry = new THREE.Geometry();
+
+       vertex = birdyGroupClone.children[i].geometry.vertices[0];
+       lineGeometry.vertices.push(new THREE.Vector3(vertex.z, vertex.y, 0));
+       
+       vertex = birdyGroupClone.children[i].geometry.vertices[1];
+       lineGeometry.vertices.push(new THREE.Vector3(vertex.z, vertex.y, 0));
+
+       line = new THREE.Line(lineGeometry, birdyGroupClone.children[i].material);
+
+       birdyGroupShadowYZ.add(line);       
+       //-----
+       //birdyGroupClone2.children[i].geometry.vertices[0].z = 0;
+       //birdyGroupClone2.children[i].geometry.vertices[1].z = 0;
+       // birdyGroupClone2.children[i].geometry = new THREE.Geometry();
+       // var lineGeometry, vertex;
+       // lineGeometry = birdyGroupClone2.children[i].geometry;
+
+       // vertex = birdyGroupClone.children[i].geomery.vertices[0];
+       // lineGeometry.vertices.push( new Vector3(vertex.x, vertex.y, 0));
+       
+       // vertex = birdyGroupClone.children[i].geometry.vertices[1];
+       // lineGeometry.vertices.push( new Vector3(vertex.x, vertex.y, 0));
+     };
+     
+     birdyGroupShadowXY.position.set(0,0,0);
+     this.xyProjectionMesh.add(birdyGroupShadowXY);
+
+     birdyGroupShadowXZ.position.set(0,0,0);
+     this.xzProjectionMesh.add(birdyGroupShadowXZ);
+
+     birdyGroupShadowYZ.position.set(0,0,0);
+     this.yzProjectionMesh.add(birdyGroupShadowYZ);
+     
+     // birdyGroupClone2.position.set(0,2,-8);
+     // scene.add(birdyGroupClone2);
+
+     // rotate projection plane about x axis
+     // note: works
+     //this.xyProjectionPlane.quaternion.multiply(rotXQuat);
+     // try {
+     //   // project first line of "birdy" onto xy plane
+     //   var birdyLine = birdyGroups[2].children[3];
+
+     //   // draw x, y components on the xyProjectionPlane
+     //   var lineGeometry = new THREE.Geometry();
+     //   var lineMaterial = new THREE.LineBasicMaterial();
+     //   lineMaterial.color = new THREE.Color(0,0,255);
+       
+     //   var vertex1 = birdyLine.geometry.vertices[0];
+     //   var vertex2 = birdyLine.geometry.vertices[1];
+
+     //   // take xy projection
+     //   lineGeometry.vertices.push(new THREE.Vector3(vertex1.x, vertex1.y, 0));
+     //   lineGeometry.vertices.push(new THREE.Vector3(vertex2.x, vertex2.y, 0));
+     //   // lineGeometry.vertices.push( new THREE.Vector3(0,0,0));
+     //   // lineGeometry.vertices.push( new THREE.Vector3(2,0,0));
+
+     //   var birdyLineXY = new THREE.Line(lineGeometry, lineMaterial);
+     //   birdyLineXY.quaternion.multiply(birdyGroups[2].quaternion);
+
+     //   // console.log("vrsketchservice.render: v1.x=" + vertex1.x + ",v1.y=" + vertex1.y);
+     //   // console.log("vrsketchservice.render: v2.x=" + vertex2.x + ",v2.y=" + vertex2.y);
+     //   // console.log("vrsketchservice.render: birdyGroups[2].quaternion.x=" + birdyGroups[2].quaternion.x + ",y=" + birdyGroups[2].quaternion.y + ",z=" + birdyGroups[2].quaternion.z);
+     //   //console.log("vrsketchservice.render: vertex.quaternion.x=" + vertex1.quaternion.x + ",y=" + vertex1.quaternion.y + ",z=" + vertex1.quaternion.z);
+       
+     //   //THREE.SceneUtils.detach(cubeMesh[i], parentCube, scene);
+     //   // this works, but it really slows things down
+     //   // it doesn't erase any prior lines though
+     //   THREE.SceneUtils.detach(this.xyProjectionMesh.children[0], this.xyProjectionMesh, scene);
+     //   this.xyProjectionMesh.children[0] = birdyLineXY;
+     //   //this.xyProjectionMesh.remove(birdyLineXY);
+     //   //this.xyProjectionMesh.add(birdyLineXY);
+
+     //   this.xyProjectionMesh.updateMatrixWorld();
+     // }
+     // catch(e) {
+     //   console.log("Caught error during projection: " + e);
+     // };
      
      if (this.vrManager.isVRMode()) {
        this.effect.render(scene, this.camera.cameraObject);

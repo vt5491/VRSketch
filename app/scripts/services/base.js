@@ -35,6 +35,9 @@ angular.module('vrsketchApp')
     factory.COLOR_YELLOW = new THREE.Color(100,255,0);
     factory.COLOR_GREEN = new THREE.Color(0,255,0);
     factory.COLOR_BLUE = new THREE.Color(0,0,255);
+    factory.COLOR_ORANGE = new THREE.Color(255,165,0);
+    factory.COLOR_WHITE = new THREE.Color(255,255,255);
+    factory.COLOR_BROWN = new THREE.Color(139,69,19);
     
     return factory;
   });

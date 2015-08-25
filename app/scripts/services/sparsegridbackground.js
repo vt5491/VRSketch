@@ -43,13 +43,14 @@ angular.module('vrsketchApp')
       var gridMin = -gridSize / 2;
       var gridMax = gridSize / 2;
       for (var i = gridMin; i <= gridMax; i += spacing) {
+      //for (var i = 0; i <= gridMax; i += spacing) {
         var lineMaterial, lineGeometry, gridLine;
         lineMaterial = new THREE.LineBasicMaterial();
         lineMaterial.color = color;;
         
         lineGeometry = new THREE.Geometry();
 
-        // plane "horizontal"
+        // plane "vertical"
         switch(plane) {
           case 'xz':
             lineGeometry.vertices.push( new THREE.Vector3(gridMin,0,i));
@@ -57,23 +58,45 @@ angular.module('vrsketchApp')
           
           break;
           case 'xy':
-            lineGeometry.vertices.push( new THREE.Vector3(i,gridMin,0));
+            //lineGeometry.vertices.push( new THREE.Vector3(i,gridMin,0));
+            lineGeometry.vertices.push( new THREE.Vector3(i,0,0));
             lineGeometry.vertices.push( new THREE.Vector3(i,gridMax,0));          
           
           break;
           case 'yz':
-            lineGeometry.vertices.push( new THREE.Vector3(0,gridMin,i));
-            lineGeometry.vertices.push( new THREE.Vector3(0,gridMax,i));          
+            // vertical really
+            //if (i >= 0) {
+              //console.log('hello');
+              //lineMaterial.color = base.COLOR_WHITE;
+            //lineGeometry.vertices.push( new THREE.Vector3(0,gridMin,i));
+            lineGeometry.vertices.push( new THREE.Vector3(0,0,i));
+            lineGeometry.vertices.push( new THREE.Vector3(0,gridMax,i));
+            //};     
           
           break;
 
         };
 
-        gridLine = new THREE.Line(lineGeometry, lineMaterial);
+        // if(plane == 'yz') {
+        //   if( i>= 0) {
+        //     gridLine = new THREE.Line(lineGeometry, lineMaterial);
+            
+        //     grid.push(gridLine);
+        //   }
+        // }
+        // else {
+          gridLine = new THREE.Line(lineGeometry, lineMaterial);
+          
+          grid.push(gridLine);
+          
+        //}    
+        // gridLine = new THREE.Line(lineGeometry, lineMaterial);
         
-        grid.push(gridLine);
+        // grid.push(gridLine);
+        
+        // console.log("gridLine a, LineMaterail.color.r=" + lineMaterial.color.r + ",g=" + lineMaterial.color.g + ",b=" + lineMaterial.color.b);
 
-        // plane "vertical"
+        // plane "horizontal"
         lineGeometry = new THREE.Geometry();
         
         switch(plane) {
@@ -83,21 +106,47 @@ angular.module('vrsketchApp')
           
           break;
           case 'xy':
-            lineGeometry.vertices.push( new THREE.Vector3(gridMin,i,0));
-            lineGeometry.vertices.push( new THREE.Vector3(gridMax,i,0));
+            if (i >= 0) {
+              lineGeometry.vertices.push( new THREE.Vector3(gridMin,i,0));
+              lineGeometry.vertices.push( new THREE.Vector3(gridMax,i,0));
+            };
+            //lineGeometry.vertices.push( new THREE.Vector3(gridMin,i,0));
+            //lineGeometry.vertices.push( new THREE.Vector3(gridMax,i,0));
           
           break;
           case 'yz':
+            // really horizonatal
+            if (i >= 0 ) {
+              //lineMaterial.color = base.COLOR_BROWN;
+              //console.log('hello2');
             lineGeometry.vertices.push( new THREE.Vector3(0,i,gridMin));
+            //lineGeometry.vertices.push( new THREE.Vector3(0,i,0));
             lineGeometry.vertices.push( new THREE.Vector3(0,i,gridMax));
+              };
           
           break;
 
         };
+
+        if(plane == 'yz' || plane == 'xy') {
+          if( i>= 0) {
+            //lineMaterial.color = base.COLOR_BROWN;
+            gridLine = new THREE.Line(lineGeometry, lineMaterial);
+            
+            grid.push(gridLine);
+          }
+        }
+        else {
+          gridLine = new THREE.Line(lineGeometry, lineMaterial);
+          
+          grid.push(gridLine);
+          
+        }
         
-        gridLine = new THREE.Line(lineGeometry, lineMaterial);
+        // gridLine = new THREE.Line(lineGeometry, lineMaterial);
         
-        grid.push(gridLine);
+        // grid.push(gridLine);
+        // console.log("gridLine b, LineMaterail.color.r=" + lineMaterial.color.r + ",g=" + lineMaterial.color.g + ",b=" + lineMaterial.color.b);
         
       };
         
@@ -110,34 +159,35 @@ angular.module('vrsketchApp')
       return grid;
     };
     
-    factory.addToScene = function (scene) {
-      for (var i= gridMin; i<= gridMax; i++) {
-        var lineMaterial, lineGeometry, gridLine;
-        // xz plane horizontal
-        lineMaterial = new THREE.LineBasicMaterial();
-        lineMaterial.color = new THREE.Color(0,255,0);
+    // factory.addToScene = function (scene) {
+    //   for (var i= gridMin; i<= gridMax; i++) {
+    //     var lineMaterial, lineGeometry, gridLine;
+    //     // xz plane horizontal
+    //     lineMaterial = new THREE.LineBasicMaterial();
+    //     lineMaterial.color = new THREE.Color(0,255,0);
 
-        lineGeometry = new THREE.Geometry();
+    //     lineGeometry = new THREE.Geometry();
 
-        lineGeometry.vertices.push( new THREE.Vector3(gridMin,0,i));
-        lineGeometry.vertices.push( new THREE.Vector3(gridMax,0,i));
+    //     lineGeometry.vertices.push( new THREE.Vector3(gridMin,0,i));
+    //     lineGeometry.vertices.push( new THREE.Vector3(gridMax,0,i));
 
-        gridLine = new THREE.Line(lineGeometry, lineMaterial);
+    //     gridLine = new THREE.Line(lineGeometry, lineMaterial);
 
-        scene.add(gridLine);
+    //     scene.add(gridLine);
 
-        // xz plane vertical
-        lineGeometry = new THREE.Geometry();
+    //     // xz plane vertical
+    //     lineGeometry = new THREE.Geometry();
 
-        lineGeometry.vertices.push( new THREE.Vector3(i,0,gridMin));
-        lineGeometry.vertices.push( new THREE.Vector3(i,0,gridMax));
+    //     lineGeometry.vertices.push( new THREE.Vector3(i,0,gridMin));
+    //     lineGeometry.vertices.push( new THREE.Vector3(i,0,gridMax));
 
-        gridLine = new THREE.Line(lineGeometry, lineMaterial);
+    //     gridLine = new THREE.Line(lineGeometry, lineMaterial);
 
-        scene.add(gridLine);
-     };
-    };
+    //     scene.add(gridLine);
+    //  };
+    // };
 
+    //TODO: rename to addToScene
     factory.addToScene2 = function (scene) {
       var grid;
       
